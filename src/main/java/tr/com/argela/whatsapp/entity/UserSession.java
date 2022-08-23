@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import tr.com.argela.whatsapp.model.result.WhatsappResult;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ import lombok.Setter;
 @Entity
 @Data
 @Table(name = "user_session")
-public class UserSession {
+public class UserSession implements WhatsappResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
