@@ -27,7 +27,7 @@ public class UserController {
             user.setName(name);
             user.setTelephone(telephone);
             user.setPassword(password);
-           whatsappResponse.setWhatsappResult(userService.save(user));
+           whatsappResponse.setSingle(userService.register(user));
            httpStatus=HttpStatus.OK;
         } catch (Exception e) {
             httpStatus=handleError(whatsappResponse, e);
@@ -40,13 +40,15 @@ public class UserController {
         WhatsappResponse whatsappResponse = new WhatsappResponse();
         HttpStatus httpStatus;
         try {
-           whatsappResponse.setWhatsappResult(userService.login(telephone, password));
+           whatsappResponse.setSingle(userService.login(telephone, password));
            httpStatus=HttpStatus.OK;
         } catch (Exception e) {
             httpStatus=handleError(whatsappResponse, e);
         }
         return new ResponseEntity<WhatsappResponse>(whatsappResponse,httpStatus);
     }
+
+
 
     private HttpStatus handleError(WhatsappResponse whatsappResponse, Exception e) {
         HttpStatus httpStatus;

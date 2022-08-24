@@ -1,15 +1,12 @@
 package tr.com.argela.whatsapp.entity;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.Getter;
@@ -20,17 +17,18 @@ import tr.com.argela.whatsapp.model.result.WhatsappResult;
 @Setter
 @Entity
 @Data
-@Table(name = "users")
-public class User implements WhatsappResult {
+@Table(name = "friends")
+public class Friend implements WhatsappResult {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
-    private String telephone;
-    private String password;
+    @ManyToOne()
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    List<Friend> friends;
+    @ManyToOne()
+    @JoinColumn(name = "friend_user_id", referencedColumnName = "id")
+    private User friend;
+
 }
