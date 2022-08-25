@@ -5,12 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tr.com.argela.whatsapp.config.KafkaTopicConfig;
 import tr.com.argela.whatsapp.entity.Friend;
 import tr.com.argela.whatsapp.entity.User;
-import tr.com.argela.whatsapp.entity.UserSession;
 import tr.com.argela.whatsapp.repository.FriendRepository;
-import tr.com.argela.whatsapp.repository.UserRepository;
-import tr.com.argela.whatsapp.repository.UserSessionRepository;
 
 @Service
 public class FriendService {
@@ -20,6 +18,9 @@ public class FriendService {
 
     @Autowired
     FriendRepository friendRepository;
+
+    @Autowired
+    KafkaTopicConfig kafkaTopicConfig;
 
     public Friend addFriend(String sessionId, String friendPhone) throws Exception {
         User user = userService.getUserBySessionId(sessionId);
@@ -34,6 +35,15 @@ public class FriendService {
         friend = new Friend();
         friend.setUser(user);
         friend.setFriend(friendUser);
+        String topicName;
+        if(user.getTelephone().compareTo(friendUser.getTelephone())<0){
+            topicName=user.getTelephone()+"-"+friendUser.getTelephone();
+        }
+        else{
+            topicName=friendUser.getTelephone()+"-"+user.getTelephone();
+        }
+        
+        kafkaTopicConfig.buildTopic(topicName);
         return friendRepository.save(friend);
     }
 
